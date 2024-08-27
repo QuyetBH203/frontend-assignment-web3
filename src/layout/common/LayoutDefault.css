@@ -1,0 +1,79 @@
+.header {
+  background: orange;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10 px;
+}
+
+.header-logo {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.header-menu {
+  display: flex;
+  align-items: center;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.header-menu li {
+  margin-right: 20px;
+}
+
+.header-menu li a {
+  text-decoration: none;
+  color: white;
+}
+
+.header-menu li a.active {
+  color: rgb(0, 0, 0);
+}
+
+.header-submenu {
+  display: none; /* Ẩn menu con theo mặc định */
+  position: absolute; /* Vị trí tuyệt đối để căn giữa dựa trên menu cha */
+  top: 100%; /* Đặt menu con phía dưới menu cha */
+  left: 50%; /* Bắt đầu menu con từ giữa menu cha */
+  transform: translateX(-50%); /* Di chuyển menu con sang trái 50% chiều rộng của nó để căn giữa */
+  background-color: white;
+  padding: 0;
+  list-style: none;
+  margin: 0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  min-width: 150px; /* Đặt chiều rộng tối thiểu cho menu con */
+}
+.header-menu-item:hover .header-submenu {
+  display: block;
+}
+.header-menu-item {
+  position: relative; /* Cần thiết để menu con hiển thị đúng vị trí */
+}
+.header-submenu li {
+  margin: 0; /* Bỏ margin mặc định */
+  padding: 0; /* Bỏ padding mặc định */
+}
+
+.header-submenu li a {
+  display: block; /* Đảm bảo các liên kết chiếm toàn bộ chiều rộng của item */
+  color: black;
+  padding: 10px; /* Đặt khoảng cách đều cho các item */
+  text-decoration: none; /* Bỏ gạch chân */
+  width: 100%; /* Đảm bảo chiều rộng 100% của menu con */
+  box-sizing: border-box; /* Bao gồm cả padding vào chiều rộng */
+}
+
+/* Thay đổi màu nền và thêm hiệu ứng hover cho các item */
+.header-submenu li a:hover {
+  background-color: #f0f0f0;
+  border-radius: 0; /* Đặt bo góc thành 0 để giữ cho item đều nhau */
+}
+.footer {
+  background: orange;
+}
+
+.main {
+  margin: 30px;
+}
