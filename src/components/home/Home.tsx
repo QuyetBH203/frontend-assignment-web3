@@ -3,12 +3,10 @@ function Home() {
   return (
     <>
       <Profile />
-      <h1 className='text-3xl font-bold underline'>Trang chu</h1>
-      {/* <ul>
-        <li>Trai cay</li>
-        <li>Rau cu</li>
-        <li>Thit</li>
-      </ul> */}
+      <div className='flex gap-x-2.5'>
+        <div className='flex-1 bg-[rgb(255,251,242)]'>haha</div>
+        <div className='flex-1 bg-[rgb(255,251,242)]'>haha</div>
+      </div>
     </>
   )
 }

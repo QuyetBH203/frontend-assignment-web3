@@ -1,5 +1,5 @@
 import { Button } from '@nextui-org/react'
-import { useConnect } from 'wagmi'
+import { useConnect, useSignMessage } from 'wagmi'
 import Web3 from 'web3'
 import GetUserByPublicAddress from '../users/service/GetUserByPublicAddress'
 import createUserByPublicAdress from '../users/service/CreateUserByPublicAdress'
@@ -12,22 +12,19 @@ let web3: Web3 | undefined
 function Login() {
   const { connectors } = useConnect()
   const { setToken } = useUser()
+  const { signMessageAsync } = useSignMessage()
 
   const handleSignMessage = async ({ publicAddress, nonce }: { publicAddress: string; nonce: number }) => {
     try {
       console.log(nonce)
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore because web3 is defined here.
 
-      const signature = await web3.eth.personal.sign(
-        `I am signing my one-time nonce: ${nonce}`,
-        publicAddress,
-        '' // MetaMask will ignore the password argument here
-      )
+      const message = `I am signing my one-time nonce: ${nonce}`
+
+      // Use Wagmi's signMessageAsync method to sign the message
+      const signature = await signMessageAsync({ message })
 
       return { publicAddress, signature }
     } catch (err) {
-      toast.error('You need to sign the message to be able to log in.')
       throw new Error('You need to sign the message to be able to log in.')
     }
   }
@@ -67,7 +64,7 @@ function Login() {
         })
         .catch((error) => {
           console.log(error)
-          window.alert('You need to sign the message to be able to log in.')
+          toast.error('You need to sign the message to be able to log in.')
         })
       console.log(data)
     } catch (error) {
