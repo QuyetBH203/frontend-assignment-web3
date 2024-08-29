@@ -3,8 +3,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10 px;
-  margin-bottom: 20px;
+  padding-bottom: 70 px;
+  /* height: 50 px; */
 }
 
 .header-logo {

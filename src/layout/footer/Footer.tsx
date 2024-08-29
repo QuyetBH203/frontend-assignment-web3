@@ -43,7 +43,7 @@ export default function Footer() {
             for navigating OpenSea.
           </div>
           <div className='flex items-center gap-2'>
-            <Input size='lg' placeholder='Your email address' />
+            <Input size='lg' placeholder='Your email address' className='border border-gray-300 rounded-lg' />
             <Button size='lg' color='secondary'>
               Sign up
             </Button>
