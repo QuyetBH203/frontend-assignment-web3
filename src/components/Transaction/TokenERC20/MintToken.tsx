@@ -21,11 +21,15 @@ function Logic() {
   return (
     <>
       <div className='container mx-auto p-4'>
-        <div className='flex items-center space-x-4'>
-          <h4 className='text-xl font-mono'>Mint Token ERC20:</h4>
-          {mintToken && <span className='text-green-500'>{mintToken}</span>}
+        <div className='flex items-center space-x-4 justify-between'>
+          <h4 className='text-xl font-mono'>
+            Mint Token ERC20: {mintToken && <span className='text-green-500'>{mintToken}</span>}
+          </h4>
 
-          <button onClick={handleClick} className='px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700'>
+          <button
+            onClick={handleClick}
+            className='flex-shrink-0 w-32 py-2 bg-blue-500 text-white rounded hover:bg-blue-700'
+          >
             Mint Token
           </button>
         </div>

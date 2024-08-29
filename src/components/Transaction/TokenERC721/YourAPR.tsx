@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 function YourAPR() {
-  const [apr, setApr] = useState<number | null>(10)
+  const [apr, setApr] = useState<number | null>(8)
   return (
     <>
       <div className='container mx-auto p-4'>

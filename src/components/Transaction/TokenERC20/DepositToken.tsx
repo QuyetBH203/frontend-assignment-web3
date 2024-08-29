@@ -18,10 +18,15 @@ function DepositToken() {
   return (
     <>
       <div className='container mx-auto p-4'>
-        <div className='flex items-center space-x-4'>
-          <h4 className='text-xl font-mono'>Deposit Token ERC20:</h4>
-          {depositToken && <span className='text-green-500'>{depositToken}</span>}
-          <button onClick={handleClick} className='px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700'>
+        <div className='flex items-center space-x-4 justify-between'>
+          <h4 className='text-xl font-mono'>
+            Deposit Token ERC20: {depositToken && <span className='text-green-500'>{depositToken}</span>}
+          </h4>
+
+          <button
+            onClick={handleClick}
+            className='flex-shrink-0 w-32 py-2 bg-blue-500 text-white rounded hover:bg-blue-700'
+          >
             Deposit Token
           </button>
         </div>

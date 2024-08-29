@@ -39,15 +39,15 @@ function LayoutDefault() {
               </NavLink>
             </li>
             <li className='header-menu-item'>
-              <NavLink className='text-xl font-mono' to='/blog'>
+              <NavLink className='text-xl font-mono' to='/history'>
                 History
               </NavLink>
               <ul className='header-submenu'>
                 <li>
-                  <NavLink to='/blog/news'>Tin Tuc Moi</NavLink>
+                  <NavLink to='/history/news'>Tin Tuc Moi</NavLink>
                 </li>
                 <li>
-                  <NavLink to='/blog/relate'>Tin tuc lien quan</NavLink>
+                  <NavLink to='/history/relate'>Tin tuc lien quan</NavLink>
                 </li>
               </ul>
             </li>
