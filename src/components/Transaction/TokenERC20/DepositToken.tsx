@@ -1,14 +1,43 @@
 import { useState } from 'react'
+import { Token as tokenERC20Address } from '../../../contracts/TokenERC20-address.json'
+import { Token as depositContractAddress } from '../../../contracts/DepositContract-address.json'
+import { abi as tokenERC20Abi } from '../../../contracts/TokenERC20.json'
+import { abi as depositContractAbi } from '../../../contracts/DepositContract.json'
+import { useAccount, useBalance, useWriteContract } from 'wagmi'
+import { parseEther } from 'ethers'
+type EthAddress = `0x${string}`
 
+type Hash = EthAddress
 function DepositToken() {
   const [depositToken, setDepositToken] = useState<number | null>(null)
   const [amountToken, setAmountToken] = useState<number>(0)
   const [showInput, setShowInput] = useState<boolean>(false)
+  const { address } = useAccount()
+  const { writeContractAsync: depositWriteContract } = useWriteContract()
+  const { writeContractAsync: approveWriteContract } = useWriteContract()
+  const { data: balance, refetch: balanceRefetch } = useBalance({
+    address: address,
+    token: tokenERC20Address as EthAddress
+  })
   const handleClick = () => {
     setShowInput(true)
   }
-  const handleDeposit = () => {
+  const handleDeposit = async () => {
     setDepositToken(amountToken)
+    if (address && balance) {
+      await approveWriteContract({
+        address: tokenERC20Address as EthAddress,
+        abi: tokenERC20Abi,
+        functionName: 'increaseAllowance',
+        args: [depositContractAddress, parseEther(amountToken.toString())]
+      })
+      await depositWriteContract({
+        address: depositContractAddress as EthAddress,
+        abi: depositContractAbi,
+        functionName: 'deposit',
+        args: [parseEther(amountToken.toString())]
+      })
+    }
     setShowInput(false)
   }
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
