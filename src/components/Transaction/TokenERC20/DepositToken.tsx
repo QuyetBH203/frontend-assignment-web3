@@ -15,7 +15,7 @@ function DepositToken() {
   const { address } = useAccount()
   const { writeContractAsync: depositWriteContract } = useWriteContract()
   const { writeContractAsync: approveWriteContract } = useWriteContract()
-  const { data: balance, refetch: balanceRefetch } = useBalance({
+  const { data: balance } = useBalance({
     address: address,
     token: tokenERC20Address as EthAddress
   })

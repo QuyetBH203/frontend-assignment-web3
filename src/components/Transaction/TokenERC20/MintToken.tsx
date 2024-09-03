@@ -3,8 +3,6 @@ import { Token as tokenERC20Address } from '../../../contracts/TokenERC20-addres
 import { abi as tokenERC20Abi } from '../../../contracts/TokenERC20.json'
 import { useAccount, useBalance, useWriteContract } from 'wagmi'
 import { parseEther } from 'ethers'
-import { waitForTransactionReceipt } from 'viem/actions'
-import { wagmiConfig } from '../../../setting/wagmi/configWagmi'
 import { Button } from '@nextui-org/react'
 
 type EthAddress = `0x${string}`
@@ -17,7 +15,7 @@ function Logic() {
   const [mintToken, setmintToken] = useState<number | null>(null)
   const { address } = useAccount()
 
-  const { data: balance, refetch: balanceRefetch } = useBalance({
+  const { data: balance } = useBalance({
     address: address,
     token: tokenERC20Address as EthAddress
   })

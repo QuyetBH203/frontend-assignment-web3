@@ -1,7 +1,22 @@
 import { useState } from 'react'
+import { useAccount, useReadContract } from 'wagmi'
+import { Token as depositContractAddress } from '../../contracts/DepositContract-address.json'
+import { abi as depositContractAbi } from '../../contracts/DepositContract.json'
+import { ethers } from 'ethers'
 
+type EthAddress = `0x${string}`
+
+type Hash = EthAddress
 function InforTokenUser() {
   const [amountERC20, setAmountERC20] = useState<number | null>(10)
+  const { address } = useAccount()
+  const result = useReadContract({
+    address: depositContractAddress as EthAddress,
+    abi: depositContractAbi,
+    functionName: 'getUserInfor',
+    args: [address]
+  })
+  console.log(result)
 
   return (
     <>
