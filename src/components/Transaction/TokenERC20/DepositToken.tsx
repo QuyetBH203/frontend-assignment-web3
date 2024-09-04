@@ -3,8 +3,10 @@ import { Token as tokenERC20Address } from '../../../contracts/TokenERC20-addres
 import { Token as depositContractAddress } from '../../../contracts/DepositContract-address.json'
 import { abi as tokenERC20Abi } from '../../../contracts/TokenERC20.json'
 import { abi as depositContractAbi } from '../../../contracts/DepositContract.json'
-import { useAccount, useBalance, useWriteContract } from 'wagmi'
-import { parseEther } from 'ethers'
+import { useAccount, useBalance, useReadContract, useWriteContract } from 'wagmi'
+import { ethers, parseEther } from 'ethers'
+import Deposit from '../../../type/Deposit'
+import { useCounterStore } from '../../../setting/store/counterState'
 type EthAddress = `0x${string}`
 
 type Hash = EthAddress
@@ -19,9 +21,20 @@ function DepositToken() {
     address: address,
     token: tokenERC20Address as EthAddress
   })
+  const { count, decrease, increase } = useCounterStore()
   const handleClick = () => {
     setShowInput(true)
   }
+
+  const { data: result, refetch } = useReadContract({
+    address: depositContractAddress as EthAddress,
+    abi: depositContractAbi,
+    functionName: 'getUserInfor',
+    args: [address]
+  })
+  console.log(result as Deposit)
+  // console.log((result as Deposit).amount)
+  // console.log(Number(ethers.formatUnits((result as Deposit).amount, 18)))
   const handleDeposit = async () => {
     setDepositToken(amountToken)
     if (address && balance) {
@@ -37,6 +50,8 @@ function DepositToken() {
         functionName: 'deposit',
         args: [parseEther(amountToken.toString())]
       })
+      increase()
+      await refetch()
     }
     setShowInput(false)
   }
@@ -49,7 +64,10 @@ function DepositToken() {
       <div className='container mx-auto p-4'>
         <div className='flex items-center space-x-4 justify-between'>
           <h4 className='text-xl font-mono'>
-            Deposit Token ERC20: {depositToken && <span className='text-green-500'>{depositToken}</span>}
+            Total tokens ERC20 staked :{' '}
+            {(result as Deposit) && (
+              <span className='text-green-500'>{Number(ethers.formatUnits((result as Deposit).amount, 18))}</span>
+            )}
           </h4>
 
           <button

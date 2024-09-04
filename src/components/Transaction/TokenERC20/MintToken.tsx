@@ -1,9 +1,10 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Token as tokenERC20Address } from '../../../contracts/TokenERC20-address.json'
 import { abi as tokenERC20Abi } from '../../../contracts/TokenERC20.json'
 import { useAccount, useBalance, useWriteContract } from 'wagmi'
-import { parseEther } from 'ethers'
+import { ethers, parseEther } from 'ethers'
 import { Button } from '@nextui-org/react'
+import { useCounterStore } from '../../../setting/store/counterState'
 
 type EthAddress = `0x${string}`
 
@@ -12,10 +13,11 @@ function Logic() {
   const [amountToken, setAmountToken] = useState<number>(0)
   const [showInput, setShowInput] = useState<boolean>(false)
   const [isMinting, setIsMinting] = useState<boolean>(false)
-  const [mintToken, setmintToken] = useState<number | null>(null)
+  const { count } = useCounterStore()
+
   const { address } = useAccount()
 
-  const { data: balance } = useBalance({
+  const { data: balance, refetch } = useBalance({
     address: address,
     token: tokenERC20Address as EthAddress
   })
@@ -26,7 +28,6 @@ function Logic() {
   }
 
   const handleMint = async () => {
-    setmintToken(amountToken)
     if (address && balance) {
       setIsMinting(true)
       try {
@@ -36,6 +37,7 @@ function Logic() {
           functionName: 'mint',
           args: [address, parseEther(amountToken.toString())]
         })
+        await refetch()
       } catch (err) {
         console.log(err)
       } finally {
@@ -45,6 +47,12 @@ function Logic() {
 
     setShowInput(false) // Ẩn input sau khi deposit
   }
+  useEffect(() => {
+    refetch()
+  }, [count])
+  // if (count > stateMint) {
+  //   await refetch()
+  // }
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setAmountToken(Number(event.target.value))
@@ -55,7 +63,10 @@ function Logic() {
       <div className='container mx-auto p-4'>
         <div className='flex items-center space-x-4 justify-between'>
           <h4 className='text-xl font-mono'>
-            Mint Token ERC20: {mintToken && <span className='text-green-500'>{mintToken}</span>}
+            Total Amount Token ERC20:{' '}
+            {balance?.value !== undefined && (
+              <span className='text-green-500'>{Number(ethers.formatUnits(balance.value, 18))}</span>
+            )}
           </h4>
 
           <button

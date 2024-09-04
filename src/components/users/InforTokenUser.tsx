@@ -16,7 +16,7 @@ function InforTokenUser() {
     functionName: 'getUserInfor',
     args: [address]
   })
-  console.log(result)
+  // console.log(result)
 
   return (
     <>
