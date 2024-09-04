@@ -5,8 +5,7 @@ import { useAccount, useBalance, useWriteContract } from 'wagmi'
 import { ethers, parseEther } from 'ethers'
 import { Button } from '@nextui-org/react'
 import { useCounterStore } from '../../../setting/store/counterState'
-
-type EthAddress = `0x${string}`
+import { EthAddress } from '../../../type/EthAddress'
 
 type Hash = EthAddress
 function Logic() {

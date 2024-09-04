@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Token as tokenERC20Address } from '../../../contracts/TokenERC20-address.json'
 import { Token as depositContractAddress } from '../../../contracts/DepositContract-address.json'
 import { abi as tokenERC20Abi } from '../../../contracts/TokenERC20.json'
@@ -7,7 +7,8 @@ import { useAccount, useBalance, useReadContract, useWriteContract } from 'wagmi
 import { ethers, parseEther } from 'ethers'
 import Deposit from '../../../type/Deposit'
 import { useCounterStore } from '../../../setting/store/counterState'
-type EthAddress = `0x${string}`
+import { EthAddress } from '../../../type/EthAddress'
+import { useWithDrawnState } from '../../../setting/store/withDrawnState'
 
 type Hash = EthAddress
 function DepositToken() {
@@ -21,7 +22,8 @@ function DepositToken() {
     address: address,
     token: tokenERC20Address as EthAddress
   })
-  const { count, decrease, increase } = useCounterStore()
+  const { increase } = useCounterStore()
+  const { count } = useWithDrawnState()
   const handleClick = () => {
     setShowInput(true)
   }
@@ -32,7 +34,6 @@ function DepositToken() {
     functionName: 'getUserInfor',
     args: [address]
   })
-  console.log(result as Deposit)
   // console.log((result as Deposit).amount)
   // console.log(Number(ethers.formatUnits((result as Deposit).amount, 18)))
   const handleDeposit = async () => {
@@ -55,6 +56,9 @@ function DepositToken() {
     }
     setShowInput(false)
   }
+  useEffect(() => {
+    refetch()
+  }, [count])
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setAmountToken(Number(event.target.value))
   }
