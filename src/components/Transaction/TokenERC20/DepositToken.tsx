@@ -9,6 +9,8 @@ import Deposit from '../../../type/Deposit'
 import { useCounterStore } from '../../../setting/store/counterState'
 import { EthAddress } from '../../../type/EthAddress'
 import { useWithDrawnState } from '../../../setting/store/withDrawnState'
+import { toast } from 'react-hot-toast'
+import { useDepositNFTState } from '../../../setting/store/DepositNFTState'
 
 type Hash = EthAddress
 function DepositToken() {
@@ -22,8 +24,12 @@ function DepositToken() {
     address: address,
     token: tokenERC20Address as EthAddress
   })
+  if (balance?.value !== undefined) {
+    console.log(Number(ethers.formatUnits(balance.value, 18)))
+  }
   const { increase } = useCounterStore()
   const { count } = useWithDrawnState()
+  const { increaseNFT } = useDepositNFTState()
   const handleClick = () => {
     setShowInput(true)
   }
@@ -38,7 +44,16 @@ function DepositToken() {
   // console.log(Number(ethers.formatUnits((result as Deposit).amount, 18)))
   const handleDeposit = async () => {
     setDepositToken(amountToken)
+    console.log(typeof amountToken)
+
     if (address && balance) {
+      let ans = ethers.formatUnits(balance.value, 18) // Chuyển đổi số dư về định dạng dễ đọc
+      if (Number(ans) < amountToken) {
+        toast.error('You do not have enough token to deposit')
+
+        return
+      }
+
       await approveWriteContract({
         address: tokenERC20Address as EthAddress,
         abi: tokenERC20Abi,
@@ -52,6 +67,9 @@ function DepositToken() {
         args: [parseEther(amountToken.toString())]
       })
       increase()
+      if (Number(amountToken) >= 1000000) {
+        increaseNFT()
+      }
       await refetch()
     }
     setShowInput(false)
@@ -85,13 +103,8 @@ function DepositToken() {
       {showInput && (
         <div className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-50'>
           <div className='bg-white p-6 rounded shadow-lg'>
-            <h4 className='text-lg font-semibold mb-4'>Enter Amount to Mint</h4>
-            <input
-              type='number'
-              value={amountToken}
-              onChange={handleInputChange}
-              className='border p-2 rounded w-full mb-4'
-            />
+            <h4 className='text-lg font-semibold mb-4'>Enter Amount to Deposit</h4>
+            <input type='number' onChange={handleInputChange} className='border p-2 rounded w-full mb-4' />
             <div className='flex justify-end space-x-4'>
               <button onClick={handleDeposit} className='px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700'>
                 Deposit

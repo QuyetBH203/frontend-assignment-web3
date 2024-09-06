@@ -1,14 +1,43 @@
+import { useAccount, useDisconnect } from 'wagmi'
 import { useUser } from '../../setting/store/user'
 import Footer from '../footer/Footer'
 import './LayoutDefault.css'
 import { Link, NavLink, Outlet } from 'react-router-dom'
+import { useEffect } from 'react'
 function LayoutDefault() {
   const { clear } = useUser()
+  const { address } = useAccount()
+  const { disconnect } = useDisconnect()
 
   const handleLogout = () => {
     clear() // Xóa token và các thông tin khác
-    // Bạn có thể điều hướng người dùng đến trang đăng nhập hoặc trang chủ tại đây
+    disconnect() // Ngắt kết nối tài khoản
   }
+
+  useEffect(() => {
+    // Lắng nghe sự kiện khi tài khoản MetaMask thay đổi
+    const handleAccountsChanged = (accounts: string[]) => {
+      if (accounts.length === 0) {
+        // Người dùng ngắt kết nối ví
+        handleLogout()
+      } else if (accounts[0] !== address) {
+        // Nếu tài khoản thay đổi, tự động đăng xuất
+        handleLogout()
+      }
+    }
+
+    // Thêm sự kiện lắng nghe vào window.ethereum
+    if (window.ethereum) {
+      window.ethereum.on('accountsChanged', handleAccountsChanged)
+    }
+
+    // Cleanup sự kiện khi component bị unmount
+    return () => {
+      if (window.ethereum) {
+        window.ethereum.removeListener('accountsChanged', handleAccountsChanged)
+      }
+    }
+  }, [address, disconnect])
   return (
     <>
       <header className='header pb-2'>

@@ -5,7 +5,7 @@ import { useAccount, useReadContract, useWriteContract } from 'wagmi'
 import { EthAddress } from '../../../type/EthAddress'
 import Deposit from '../../../type/Deposit'
 import { ethers } from 'ethers'
-import { toast } from 'react-toastify'
+import { toast } from 'react-hot-toast'
 import { useWithDrawnState } from '../../../setting/store/withDrawnState'
 import { useCounterStore } from '../../../setting/store/counterState'
 

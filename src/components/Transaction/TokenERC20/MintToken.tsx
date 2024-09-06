@@ -30,13 +30,19 @@ function Logic() {
     if (address && balance) {
       setIsMinting(true)
       try {
-        await mintWriteContract({
+        const txResponse = await mintWriteContract({
           address: tokenERC20Address as EthAddress,
           abi: tokenERC20Abi,
           functionName: 'mint',
           args: [address, parseEther(amountToken.toString())]
         })
-        await refetch()
+        const provider = new ethers.BrowserProvider(window.ethereum)
+        const receipt = await provider.waitForTransaction(txResponse)
+        if (receipt?.status === 1) {
+          await refetch()
+          setShowInput(false)
+        }
+        console.log(txResponse)
       } catch (err) {
         console.log(err)
       } finally {
@@ -44,7 +50,7 @@ function Logic() {
       }
     }
 
-    setShowInput(false) // Ẩn input sau khi deposit
+    // Ẩn input sau khi deposit
   }
   useEffect(() => {
     refetch()
