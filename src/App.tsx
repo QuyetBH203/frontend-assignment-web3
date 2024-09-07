@@ -17,7 +17,12 @@ function App() {
             <Toaster
               position='top-left'
               toastOptions={{
-                duration: 4000 // Thời gian hiển thị là 3 giây (3000ms)
+                duration: 4000, // Thời gian hiển thị là 4 giây
+                style: {
+                  fontSize: '16px', // Tăng cỡ chữ
+                  padding: '16px', // Tăng khoảng cách padding
+                  minWidth: '300px' // Tăng chiều rộng tối thiểu của thông báo
+                }
               }}
             />
           </QueryClientProvider>

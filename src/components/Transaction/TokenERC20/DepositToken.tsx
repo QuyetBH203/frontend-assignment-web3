@@ -12,14 +12,14 @@ import { useWithDrawnState } from '../../../setting/store/withDrawnState'
 import { toast } from 'react-hot-toast'
 import { useDepositNFTState } from '../../../setting/store/DepositNFTState'
 
-type Hash = EthAddress
 function DepositToken() {
-  const [depositToken, setDepositToken] = useState<number | null>(null)
   const [amountToken, setAmountToken] = useState<number>(0)
   const [showInput, setShowInput] = useState<boolean>(false)
   const { address } = useAccount()
   const { writeContractAsync: depositWriteContract } = useWriteContract()
   const { writeContractAsync: approveWriteContract } = useWriteContract()
+
+  //lay so du hien tai cua account
   const { data: balance } = useBalance({
     address: address,
     token: tokenERC20Address as EthAddress
@@ -28,12 +28,16 @@ function DepositToken() {
     console.log(Number(ethers.formatUnits(balance.value, 18)))
   }
   const { increase } = useCounterStore()
+  // bien state de theo doi so du khi rut token
   const { count } = useWithDrawnState()
+
+  //theo kiem tra so luong nft khi deposit token
   const { increaseNFT } = useDepositNFTState()
   const handleClick = () => {
     setShowInput(true)
   }
 
+  //doc thong tin user
   const { data: result, refetch } = useReadContract({
     address: depositContractAddress as EthAddress,
     abi: depositContractAbi,
@@ -43,7 +47,6 @@ function DepositToken() {
   // console.log((result as Deposit).amount)
   // console.log(Number(ethers.formatUnits((result as Deposit).amount, 18)))
   const handleDeposit = async () => {
-    setDepositToken(amountToken)
     console.log(typeof amountToken)
 
     if (address && balance) {
@@ -53,27 +56,55 @@ function DepositToken() {
 
         return
       }
+      if (amountToken >= 1000000) {
+        console.log('Approve')
+        const provider = new ethers.BrowserProvider(window.ethereum)
 
-      await approveWriteContract({
-        address: tokenERC20Address as EthAddress,
-        abi: tokenERC20Abi,
-        functionName: 'increaseAllowance',
-        args: [depositContractAddress, parseEther(amountToken.toString())]
-      })
-      await depositWriteContract({
-        address: depositContractAddress as EthAddress,
-        abi: depositContractAbi,
-        functionName: 'deposit',
-        args: [parseEther(amountToken.toString())]
-      })
-      increase()
-      if (Number(amountToken) >= 1000000) {
-        increaseNFT()
+        // approve so luong token muon deposit
+        const txResponse = await approveWriteContract({
+          address: tokenERC20Address as EthAddress,
+          abi: tokenERC20Abi,
+          functionName: 'increaseAllowance',
+          args: [depositContractAddress, parseEther(amountToken.toString())]
+        })
+        const receipt = await provider.waitForTransaction(txResponse)
+        if (receipt?.status === 1) {
+          const tyResponse = await depositWriteContract({
+            address: depositContractAddress as EthAddress,
+            abi: depositContractAbi,
+            functionName: 'deposit',
+            args: [parseEther(amountToken.toString())]
+          })
+          const receipt = await provider.waitForTransaction(tyResponse)
+          if (receipt?.status === 1) {
+            // cap nhat state de tang so luong nft
+            increaseNFT()
+            toast.success(`You received 1 NFT`)
+          }
+        }
+      } else {
+        // approve so luong token muon deposit
+        await approveWriteContract({
+          address: tokenERC20Address as EthAddress,
+          abi: tokenERC20Abi,
+          functionName: 'increaseAllowance',
+          args: [depositContractAddress, parseEther(amountToken.toString())]
+        })
+        await depositWriteContract({
+          address: depositContractAddress as EthAddress,
+          abi: depositContractAbi,
+          functionName: 'deposit',
+          args: [parseEther(amountToken.toString())]
+        })
       }
+
+      increase()
       await refetch()
     }
     setShowInput(false)
   }
+
+  // khi withdrawn token thi amount token cua user thay doi
   useEffect(() => {
     refetch()
   }, [count])

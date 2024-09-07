@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react'
 import { Token as tokenERC721Address } from '../../../contracts/TokenERC721-address.json'
+import { Token as depositContractAddress } from '../../../contracts/DepositContract-address.json'
+import { abi as depositContractAbi } from '../../../contracts/DepositContract.json'
 import { abi as tokenERC721Abi } from '../../../contracts/TokenERC721.json'
-import { useAccount, useBalance, useReadContract } from 'wagmi'
+import { useAccount, useBalance, useReadContract, useWriteContract } from 'wagmi'
 import { EthAddress } from '../../../type/EthAddress'
 import { ethers } from 'ethers'
 import toast from 'react-hot-toast'
 import { useDepositNFTState } from '../../../setting/store/DepositNFTState'
+import { useAprState } from '../../../setting/store/AprState'
 
 function DepositNFT() {
   const [showInput, setShowInput] = useState<boolean>(false)
@@ -13,17 +16,13 @@ function DepositNFT() {
   const [nfts, setNFTs] = useState<any[]>([])
   const { address } = useAccount()
   const { countNFT } = useDepositNFTState()
+  const { increaseApr } = useAprState()
   const { data: balance, refetch } = useBalance({
     address: address,
     token: tokenERC721Address as EthAddress
   })
   console.log(balance)
-  // const { data: nftCount, refetch } = useReadContract({
-  //   address: tokenERC721Address as EthAddress,
-  //   abi: tokenERC721Abi,
-  //   functionName: 'balanceOf',
-  //   args: [address]
-  // })
+
   const { data: nftCount, refetch: refetchNFTCount } = useReadContract({
     address: tokenERC721Address as EthAddress,
     abi: tokenERC721Abi,
@@ -31,8 +30,10 @@ function DepositNFT() {
     args: [address]
   })
 
-  console.log(typeof nftCount)
+  const { writeContractAsync: depositWriteContract } = useWriteContract()
+
   console.log(Number(nftCount))
+  console.log(nftCount)
   console.log(countNFT)
   useEffect(() => {
     refetchNFTCount()
@@ -52,9 +53,7 @@ function DepositNFT() {
       setNFTs(nftData)
     }
 
-    if (nftCount) {
-      fetchNFTs()
-    }
+    fetchNFTs()
   }, [nftCount, address])
   console.log(nfts)
   const handleClick = () => {
@@ -64,11 +63,35 @@ function DepositNFT() {
     }
     setShowInput(true)
   }
-  const handleDeposit = (id: String) => {
+  const handleDeposit = async (id: String) => {
     setNFTID(NFTID)
+    const provider = new ethers.BrowserProvider(window.ethereum)
 
-    console.log(id)
-    setShowInput(false)
+    const tyResponse = await depositWriteContract({
+      address: tokenERC721Address as EthAddress,
+      abi: tokenERC721Abi,
+      functionName: 'setApprovalForAll',
+      args: [depositContractAddress, true]
+    })
+    const ans = await provider.waitForTransaction(tyResponse)
+    if (ans?.status === 1) {
+      const txResponse = await depositWriteContract({
+        address: depositContractAddress as EthAddress,
+        abi: depositContractAbi,
+        functionName: 'depositNFT',
+        args: [Number(id)]
+      })
+
+      const receipt = await provider.waitForTransaction(txResponse)
+      if (receipt?.status === 1) {
+        toast.success(`Deposit NFT ${id} successfully`)
+        refetchNFTCount()
+        increaseApr()
+      }
+
+      console.log(id)
+      setShowInput(false)
+    }
   }
 
   return (

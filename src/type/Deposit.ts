@@ -7,6 +7,7 @@ interface Deposit {
   receiveReward: BigNumberish
   APR: BigNumberish
   claimedNFT: boolean
+  userNft: BigNumberish[]
 }
 
 export default Deposit
