@@ -58,7 +58,7 @@ function DepositNFT() {
   console.log(nfts)
   const handleClick = () => {
     if (!nfts.length) {
-      toast.error('You do not have any NFTs')
+      toast.error('You do not have any NFTs to deposit')
       return
     }
     setShowInput(true)
@@ -101,7 +101,7 @@ function DepositNFT() {
 
         <button
           onClick={handleClick}
-          className='flex-shrink-0 w-32 py-2 bg-blue-500 text-white rounded hover:bg-blue-700'
+          className='flex-shrink-0 w-32 py-2 bg-[rgb(250,124,21)] text-white rounded hover:bg-[rgb(250,124,130)]'
         >
           Deposit NFT
         </button>
@@ -116,7 +116,7 @@ function DepositNFT() {
               <ul className='grid grid-cols-3 gap-4 border p-2 rounded mb-4 max-h-48 overflow-y-auto'>
                 {nfts.map((nft, index) => (
                   <li key={index} className='mb-2 flex flex-col items-center'>
-                    <p className='text-sm mb-1'>Token ID: {nft.tokenId.toString()}</p>
+                    <p className='text-sm mb-1'>NFT ID: {nft.tokenId.toString()}</p>
                     <img
                       src='https://thumbor.forbes.com/thumbor/fit-in/x/https://www.forbes.com/advisor/in/wp-content/uploads/2022/03/monkey-g412399084_1280.jpg'
                       alt={`NFT ${nft.tokenId}`}
@@ -129,9 +129,6 @@ function DepositNFT() {
             )}
 
             <div className='flex justify-end space-x-4'>
-              {/* <button onClick={handleDeposit} className='px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700'>
-                Mint
-              </button> */}
               <button
                 onClick={() => setShowInput(false)}
                 className='px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700'

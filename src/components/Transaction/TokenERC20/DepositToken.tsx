@@ -117,7 +117,7 @@ function DepositToken() {
       <div className='container mx-auto p-4'>
         <div className='flex items-center space-x-4 justify-between'>
           <h4 className='text-xl font-mono'>
-            Total tokens ERC20 staked :{' '}
+            Total tokens ERC20 you are staking :{' '}
             {(result as Deposit) && (
               <span className='text-green-500'>{Number(ethers.formatUnits((result as Deposit).amount, 18))}</span>
             )}

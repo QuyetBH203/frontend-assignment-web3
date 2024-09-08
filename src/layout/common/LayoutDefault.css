@@ -1,5 +1,5 @@
 .header {
-  background: orange;
+  background: rgb(198, 154, 57);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -70,9 +70,6 @@
 .header-submenu li a:hover {
   background-color: #f0f0f0;
   border-radius: 0; /* Đặt bo góc thành 0 để giữ cho item đều nhau */
-}
-.footer {
-  background: orange;
 }
 
 .main {

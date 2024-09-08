@@ -3,9 +3,12 @@ import { Token as depositContractAddress } from '../../../contracts/DepositContr
 import { abi as depositContractAbi } from '../../../contracts/DepositContract.json'
 import { EthAddress } from '../../../type/EthAddress'
 import Deposit from '../../../type/Deposit'
+import { useEffect } from 'react'
+import { useAprState } from '../../../setting/store/AprState'
 
 function AmountNFT() {
   const { address } = useAccount()
+  const { APR } = useAprState()
   const { data: result, refetch } = useReadContract({
     address: depositContractAddress as EthAddress,
     abi: depositContractAbi,
@@ -20,6 +23,10 @@ function AmountNFT() {
     console.log(JSON.parse(jsonResult)) // In ra dưới dạng JSON
     data = JSON.parse(jsonResult) as Deposit
   }
+
+  useEffect(() => {
+    refetch()
+  }, [APR])
 
   // console.log(JSON.stringify(result as Deposit))
 

@@ -20,12 +20,12 @@ export default function Profile() {
   }, [])
   return (
     <>
-      <div className='flex items-center space-x-2 border border-gray-300 rounded-lg bg-[rgb(220,236,255)] p-1'>
+      <div className='flex items-center space-x-2  p-1'>
         <h3 className='text-xl font-mono'>Your public Address:</h3>
         {loading ? (
           <p>Loading...</p> // Show loading indicator while fetching
         ) : publicAddress ? (
-          <p className='font-medium'>{publicAddress}</p> // Display the public address once fetched
+          <p className='font-medium border border-gray-300 rounded-lg p-2 bg-[rgb(220,236,255)]'>{publicAddress}</p> // Display the public address once fetched
         ) : (
           <p>Failed to fetch public address.</p> // Display error message if fetching fails
         )}

@@ -1,5 +1,5 @@
 import { Icon } from '@iconify-icon/react/dist/iconify.mjs'
-import { Button, Input } from '@nextui-org/react'
+import { Button } from '@nextui-org/react'
 
 const iconList = [
   {
@@ -37,14 +37,19 @@ export default function Footer() {
     <div className='flex justify-center bg-secondary-800'>
       <div className='flex w-full max-w-default gap-16 px-16 py-10 text-white'>
         <div className='flex flex-1 flex-col gap-2'>
-          <div className='text-xl font-bold'>Bui Huu Quyet</div>
-          <div>
+          <div className='text-xl font-bold'>Stay in the loop</div>
+          <div className='text-balance text-base'>
             Join our mailing list to stay in the loop with our newest feature releases, NFT drops, and tips and tricks
-            for navigating OpenSea.
+            for navigating OpenSea. The world’s first and largest digital marketplace for crypto collectibles and
+            non-fungible tokens (NFTs). Buy, sell, and discover exclusive digital items.
           </div>
           <div className='flex items-center gap-2'>
-            <Input size='lg' placeholder='Your email address' className='border border-gray-300 rounded-lg' />
-            <Button size='lg' color='secondary'>
+            <input type='email' placeholder='Enter your email' className='rounded-lg p-2 border border-gray-300' />
+            <Button
+              size='lg'
+              color='secondary'
+              className='pl-2 w-32 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 font-semibold'
+            >
               Sign up
             </Button>
           </div>
