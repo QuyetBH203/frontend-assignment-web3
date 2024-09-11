@@ -6,10 +6,13 @@ import { ethers } from 'ethers'
 import Deposit from '../../../type/Deposit'
 import { toast } from 'react-hot-toast'
 import { useRewardStore } from '../../../setting/store/claimReward'
+import { useStateTransaction } from '../../../setting/store/stateTransaction'
 
 function ClaimReward() {
   const { address } = useAccount()
   const { increaseReward } = useRewardStore()
+  const { increaseTransaction } = useStateTransaction()
+
   const { writeContractAsync: claimRewardWriteContract } = useWriteContract()
   const { data: result, refetch } = useReadContract({
     address: depositContractAddress as EthAddress,
@@ -33,6 +36,7 @@ function ClaimReward() {
         await refetch()
         toast.success(`you received ${ethers.formatUnits((result as Deposit).receiveReward, 18)}`)
         increaseReward()
+        increaseTransaction()
       }
     } else {
       toast.error('You can not claim reward')

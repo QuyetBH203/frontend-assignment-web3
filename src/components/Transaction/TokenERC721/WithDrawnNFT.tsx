@@ -8,10 +8,13 @@ import toast from 'react-hot-toast'
 import { UserInformation } from '../../../type/InforUser'
 import { ethers } from 'ethers'
 import { useDepositNFTState } from '../../../setting/store/DepositNFTState'
+import { useStateTransaction } from '../../../setting/store/stateTransaction'
 
 function WithDrawnNFT() {
   const [showInput, setShowInput] = useState<boolean>(false)
   const { address } = useAccount()
+  const { increaseTransaction } = useStateTransaction()
+
   const { decreaseNFT } = useDepositNFTState()
   const { writeContractAsync: withdrawWriteContract } = useWriteContract()
 
@@ -64,6 +67,7 @@ function WithDrawnNFT() {
         toast.success('Withdraw NFT success')
         refetch()
         decreaseNFT()
+        increaseTransaction()
       } else {
         toast.error('Withdraw NFT failed')
       }

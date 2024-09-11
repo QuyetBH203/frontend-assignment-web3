@@ -9,12 +9,15 @@ import { ethers } from 'ethers'
 import toast from 'react-hot-toast'
 import { useDepositNFTState } from '../../../setting/store/DepositNFTState'
 import { useAprState } from '../../../setting/store/AprState'
+import { useStateTransaction } from '../../../setting/store/stateTransaction'
 
 function DepositNFT() {
   const [showInput, setShowInput] = useState<boolean>(false)
   const [NFTID, setNFTID] = useState<number>(0)
   const [nfts, setNFTs] = useState<any[]>([])
   const { address } = useAccount()
+  const { increaseTransaction } = useStateTransaction()
+
   const { countNFT } = useDepositNFTState()
   const { increaseApr } = useAprState()
   const { data: balance, refetch } = useBalance({
@@ -88,6 +91,7 @@ function DepositNFT() {
         toast.success(`Deposit NFT ${id} successfully`)
         refetchNFTCount()
         increaseApr()
+        increaseTransaction()
       }
 
       console.log(id)

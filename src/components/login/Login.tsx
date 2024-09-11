@@ -79,7 +79,7 @@ function Login() {
       <div className='flex justify-center items-center h-screen bg-[rgb(255,251,242)]'>
         <div className='text-center  rounded-lg '>
           <Button onClick={handleClick} className='m-2 w-80 h-16 flex justify-center items-center' color='primary'>
-            <img src={connectors[1].icon} alt='MetaMask' className='inline-block mr-2' />
+            <img src={connectors[1].icon} alt='MetaMask' className='inline-block mr-2 w-12 h-12' />
             <h3 className='font-bold text-yellow-50'>Sign in with {connectors[1].name}</h3>
           </Button>
         </div>

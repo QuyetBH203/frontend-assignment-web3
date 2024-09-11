@@ -12,11 +12,13 @@ import { useWithDrawnState } from '../../../setting/store/withDrawnState'
 import { toast } from 'react-hot-toast'
 import { useDepositNFTState } from '../../../setting/store/DepositNFTState'
 import { Button } from '@nextui-org/react'
+import { useStateTransaction } from '../../../setting/store/stateTransaction'
 
 function DepositToken() {
   const [amountToken, setAmountToken] = useState<number>(0)
   const [showInput, setShowInput] = useState<boolean>(false)
   const { address } = useAccount()
+  const { increaseTransaction } = useStateTransaction()
   const { writeContractAsync: depositWriteContract, isPending: isPendingDeposit } = useWriteContract()
   const { writeContractAsync: approveWriteContract, isPending: isPendingApprove } = useWriteContract()
 
@@ -83,6 +85,7 @@ function DepositToken() {
             toast.success(`You received 1 NFT`)
             increase()
             await refetch()
+            increaseTransaction()
             setShowInput(false)
           }
         }
@@ -110,6 +113,7 @@ function DepositToken() {
             toast.success('Deposit token successfully')
             increase()
             await refetch()
+            increaseTransaction()
           }
         }
         // deposit token

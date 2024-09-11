@@ -8,10 +8,12 @@ import { ethers } from 'ethers'
 import { toast } from 'react-hot-toast'
 import { useWithDrawnState } from '../../../setting/store/withDrawnState'
 import { useCounterStore } from '../../../setting/store/counterState'
+import { useStateTransaction } from '../../../setting/store/stateTransaction'
 
 function WithDrawnToken() {
   const [showInput, setShowInput] = useState<boolean>(false)
   const { address } = useAccount()
+  const { increaseTransaction } = useStateTransaction()
 
   const { writeContractAsync: withDrawnWriteContract } = useWriteContract()
   const { increase } = useWithDrawnState()
@@ -54,6 +56,8 @@ function WithDrawnToken() {
       if (ans?.status === 1) {
         increase()
         decrease()
+        increaseTransaction()
+        toast.success('WithDrawn success')
       }
     }
   }
