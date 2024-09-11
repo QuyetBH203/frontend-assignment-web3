@@ -43,15 +43,19 @@ function WithDrawnToken() {
 
   const handleWithdrawn = async () => {
     if (result && address) {
-      await withDrawnWriteContract({
+      const provider = new ethers.BrowserProvider(window.ethereum)
+      const txResponsee = await withDrawnWriteContract({
         address: depositContractAddress as EthAddress,
         abi: depositContractAbi,
         functionName: 'withdrawn'
       })
-      increase()
-      decrease()
+      setShowInput(false) // Ẩn input sau khi deposit
+      const ans = await provider.waitForTransaction(txResponsee)
+      if (ans?.status === 1) {
+        increase()
+        decrease()
+      }
     }
-    setShowInput(false) // Ẩn input sau khi deposit
   }
 
   return (

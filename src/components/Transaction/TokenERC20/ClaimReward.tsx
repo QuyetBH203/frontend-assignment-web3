@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { useAccount, useReadContract, useWriteContract } from 'wagmi'
 import { EthAddress } from '../../../type/EthAddress'
 import { abi as depositContractAbi } from '../../../contracts/DepositContract.json'
@@ -6,13 +5,11 @@ import { Token as depositContractAddress } from '../../../contracts/DepositContr
 import { ethers } from 'ethers'
 import Deposit from '../../../type/Deposit'
 import { toast } from 'react-hot-toast'
-import { useCounterStore } from '../../../setting/store/counterState'
+import { useRewardStore } from '../../../setting/store/claimReward'
 
 function ClaimReward() {
-  const [showInput, setShowInput] = useState<boolean>(false)
-
   const { address } = useAccount()
-  const { increase } = useCounterStore()
+  const { increaseReward } = useRewardStore()
   const { writeContractAsync: claimRewardWriteContract } = useWriteContract()
   const { data: result, refetch } = useReadContract({
     address: depositContractAddress as EthAddress,
@@ -24,16 +21,19 @@ function ClaimReward() {
 
   const handleClick = async () => {
     if (result && address && Number(ethers.formatUnits((result as Deposit).amount, 18)) !== 0) {
-      await claimRewardWriteContract({
+      const provider = new ethers.BrowserProvider(window.ethereum)
+
+      const txResponse = await claimRewardWriteContract({
         address: depositContractAddress as EthAddress,
         abi: depositContractAbi,
         functionName: 'claimReward'
       })
-      await refetch()
-      toast.success(`you received ${ethers.formatUnits((result as Deposit).receiveReward, 18)}`)
-      increase()
-
-      setShowInput(true)
+      const receipt = await provider.waitForTransaction(txResponse)
+      if (receipt?.status === 1) {
+        await refetch()
+        toast.success(`you received ${ethers.formatUnits((result as Deposit).receiveReward, 18)}`)
+        increaseReward()
+      }
     } else {
       toast.error('You can not claim reward')
     }

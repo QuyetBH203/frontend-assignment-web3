@@ -73,6 +73,7 @@ function DepositNFT() {
       functionName: 'setApprovalForAll',
       args: [depositContractAddress, true]
     })
+    setShowInput(false)
     const ans = await provider.waitForTransaction(tyResponse)
     if (ans?.status === 1) {
       const txResponse = await depositWriteContract({
@@ -90,7 +91,6 @@ function DepositNFT() {
       }
 
       console.log(id)
-      setShowInput(false)
     }
   }
 

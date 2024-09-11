@@ -11,13 +11,14 @@ import { EthAddress } from '../../../type/EthAddress'
 import { useWithDrawnState } from '../../../setting/store/withDrawnState'
 import { toast } from 'react-hot-toast'
 import { useDepositNFTState } from '../../../setting/store/DepositNFTState'
+import { Button } from '@nextui-org/react'
 
 function DepositToken() {
   const [amountToken, setAmountToken] = useState<number>(0)
   const [showInput, setShowInput] = useState<boolean>(false)
   const { address } = useAccount()
-  const { writeContractAsync: depositWriteContract } = useWriteContract()
-  const { writeContractAsync: approveWriteContract } = useWriteContract()
+  const { writeContractAsync: depositWriteContract, isPending: isPendingDeposit } = useWriteContract()
+  const { writeContractAsync: approveWriteContract, isPending: isPendingApprove } = useWriteContract()
 
   //lay so du hien tai cua account
   const { data: balance } = useBalance({
@@ -80,28 +81,43 @@ function DepositToken() {
             // cap nhat state de tang so luong nft
             increaseNFT()
             toast.success(`You received 1 NFT`)
+            increase()
+            await refetch()
+            setShowInput(false)
           }
         }
       } else {
         // approve so luong token muon deposit
-        await approveWriteContract({
+        const provider = new ethers.BrowserProvider(window.ethereum)
+        const tuResponse = await approveWriteContract({
           address: tokenERC20Address as EthAddress,
           abi: tokenERC20Abi,
           functionName: 'increaseAllowance',
           args: [depositContractAddress, parseEther(amountToken.toString())]
         })
-        await depositWriteContract({
-          address: depositContractAddress as EthAddress,
-          abi: depositContractAbi,
-          functionName: 'deposit',
-          args: [parseEther(amountToken.toString())]
-        })
+        const ans = await provider.waitForTransaction(tuResponse)
+        if (ans?.status === 1) {
+          const tzResponse = await depositWriteContract({
+            address: depositContractAddress as EthAddress,
+            abi: depositContractAbi,
+            functionName: 'deposit',
+            args: [parseEther(amountToken.toString())]
+          })
+          const cns = await provider.waitForTransaction(tzResponse)
+          setShowInput(false)
+
+          if (cns?.status === 1) {
+            toast.success('Deposit token successfully')
+            increase()
+            await refetch()
+          }
+        }
+        // deposit token
       }
 
-      increase()
-      await refetch()
+      // increase()
+      // await refetch()
     }
-    setShowInput(false)
   }
 
   // khi withdrawn token thi amount token cua user thay doi
@@ -123,12 +139,12 @@ function DepositToken() {
             )}
           </h4>
 
-          <button
+          <Button
             onClick={handleClick}
             className='flex-shrink-0 w-32 py-2 bg-blue-500 text-white rounded hover:bg-blue-700'
           >
             Deposit Token
-          </button>
+          </Button>
         </div>
       </div>
       {showInput && (
@@ -137,9 +153,13 @@ function DepositToken() {
             <h4 className='text-lg font-semibold mb-4'>Enter Amount to Deposit</h4>
             <input type='number' onChange={handleInputChange} className='border p-2 rounded w-full mb-4' />
             <div className='flex justify-end space-x-4'>
-              <button onClick={handleDeposit} className='px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700'>
+              <Button
+                onClick={handleDeposit}
+                className='px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700'
+                isLoading={isPendingDeposit || isPendingApprove}
+              >
                 Deposit
-              </button>
+              </Button>
               <button
                 onClick={() => setShowInput(false)}
                 className='px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700'

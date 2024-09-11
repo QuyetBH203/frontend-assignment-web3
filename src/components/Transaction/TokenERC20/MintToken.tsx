@@ -6,6 +6,7 @@ import { ethers, parseEther } from 'ethers'
 import { Button } from '@nextui-org/react'
 import { useCounterStore } from '../../../setting/store/counterState'
 import { EthAddress } from '../../../type/EthAddress'
+import { useRewardStore } from '../../../setting/store/claimReward'
 
 type Hash = EthAddress
 function Logic() {
@@ -13,6 +14,7 @@ function Logic() {
   const [showInput, setShowInput] = useState<boolean>(false)
   const [isMinting, setIsMinting] = useState<boolean>(false)
   const { count } = useCounterStore()
+  const { countReward } = useRewardStore()
 
   const { address } = useAccount()
 
@@ -54,7 +56,7 @@ function Logic() {
   }
   useEffect(() => {
     refetch()
-  }, [count])
+  }, [count, countReward])
   // if (count > stateMint) {
   //   await refetch()
   // }

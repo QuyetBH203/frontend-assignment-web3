@@ -1,5 +1,4 @@
 import { create } from 'zustand'
-import { CounterState } from './counterState'
 
 interface DepositNFTState {
   countNFT: number

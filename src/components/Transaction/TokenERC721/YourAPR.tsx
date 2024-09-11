@@ -23,6 +23,7 @@ function YourAPR() {
     console.log(JSON.parse(jsonResult)) // In ra dưới dạng JSON
     data = JSON.parse(jsonResult) as Deposit
   }
+  console.log(data)
 
   useEffect(() => {
     refetch()

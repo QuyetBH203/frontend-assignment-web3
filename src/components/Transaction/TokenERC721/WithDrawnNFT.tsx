@@ -50,6 +50,7 @@ function WithDrawnNFT() {
       functionName: 'setApprovalForAll',
       args: [tokenERC721Address, true]
     })
+    setShowInput(false)
     const ans = await provider.waitForTransaction(txResponse)
     if (ans?.status === 1) {
       const tyResponse = await withdrawWriteContract({
@@ -66,7 +67,6 @@ function WithDrawnNFT() {
       } else {
         toast.error('Withdraw NFT failed')
       }
-      setShowInput(false)
     }
   }
 

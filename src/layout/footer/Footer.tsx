@@ -1,5 +1,6 @@
 import { Icon } from '@iconify-icon/react/dist/iconify.mjs'
 import { Button } from '@nextui-org/react'
+import { Input } from '@nextui-org/react'
 
 const iconList = [
   {
@@ -44,12 +45,8 @@ export default function Footer() {
             non-fungible tokens (NFTs). Buy, sell, and discover exclusive digital items.
           </div>
           <div className='flex items-center gap-2'>
-            <input type='email' placeholder='Enter your email' className='rounded-lg p-2 border border-gray-300' />
-            <Button
-              size='lg'
-              color='secondary'
-              className='pl-2 w-32 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 font-semibold'
-            >
+            <Input type='email' placeholder='Enter your email' />
+            <Button size='lg' color='secondary'>
               Sign up
             </Button>
           </div>
@@ -70,7 +67,7 @@ export default function Footer() {
         </div>
         <div className='flex-1'>
           <div className='text-xl font-bold'>Need help?</div>
-          <Button size='lg' color='secondary'>
+          <Button size='lg' color='warning'>
             Contact Support By Email
           </Button>
         </div>
