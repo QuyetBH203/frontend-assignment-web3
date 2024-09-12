@@ -5,10 +5,19 @@ import { EthAddress } from '../../../type/EthAddress'
 import Deposit from '../../../type/Deposit'
 import { Token as depositContractAddress } from '../../../contracts/DepositContract-address.json'
 import { abi as depositContractAbi } from '../../../contracts/DepositContract.json'
+import { useAprChange } from '../../../setting/store/changeAprState'
 
 function YourAPR() {
   const { address } = useAccount()
   const { APR } = useAprState()
+  const { APRChange } = useAprChange()
+
+  const { data: defaultApr, refetch: refetchDefaultApr } = useReadContract({
+    address: depositContractAddress as EthAddress,
+    abi: depositContractAbi,
+    functionName: 'getAPR'
+  })
+  console.log(Number(defaultApr))
   const { data: result, refetch } = useReadContract({
     address: depositContractAddress as EthAddress,
     abi: depositContractAbi,
@@ -27,14 +36,16 @@ function YourAPR() {
 
   useEffect(() => {
     refetch()
-  }, [APR])
+    refetchDefaultApr()
+  }, [APR, APRChange])
 
   return (
     <>
       <div className='container mx-auto p-4'>
         <div className='flex items-center space-x-4'>
           <h4 className='text-xl font-mono'>
-            Your APR: <span className='text-green-500'>{Number(data?.APR) === 0 ? 8 : Number(data?.APR)} %</span>
+            Your APR:{' '}
+            <span className='text-green-500'>{Number(data?.APR) === 0 ? Number(defaultApr) : Number(data?.APR)} %</span>
           </h4>
         </div>
       </div>

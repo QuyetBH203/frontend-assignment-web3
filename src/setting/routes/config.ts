@@ -3,13 +3,12 @@ import PrivateRoutes from '../../components/privateRoutes'
 import Profile from '../../components/users/Profile'
 import Home from '../../components/home/Home'
 import Blog from '../../components/AllTransaction'
-import BlogAll from '../../components/AllTransaction/TransactionAll'
 import BlogNew from '../../components/AllTransaction/BlogNew'
 import BlogRelated from '../../components/AllTransaction/BlogRelates'
 import BlogDetail from '../../components/AllTransaction/BlogDetail'
-import Contact from '../../components/contact'
 import Login from '../../components/login/Login'
 import LayoutDefault from '../../layout/common/index'
+import TransactionAll from '../../components/AllTransaction/TransactionAll'
 
 export const routes: RouteObject[] = [
   {
@@ -33,7 +32,7 @@ export const routes: RouteObject[] = [
             children: [
               {
                 index: true,
-                Component: BlogAll
+                Component: TransactionAll
               },
               {
                 path: 'news',
@@ -49,10 +48,7 @@ export const routes: RouteObject[] = [
               }
             ]
           },
-          {
-            path: 'contact',
-            Component: Contact
-          },
+
           {
             path: 'login',
             Component: Login

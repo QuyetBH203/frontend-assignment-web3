@@ -152,24 +152,24 @@ function DepositToken() {
         </div>
       </div>
       {showInput && (
-        <div className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-50'>
-          <div className='bg-white p-6 rounded shadow-lg'>
-            <h4 className='text-lg font-semibold mb-4'>Enter Amount to Deposit</h4>
-            <input type='number' onChange={handleInputChange} className='border p-2 rounded w-full mb-4' />
-            <div className='flex justify-end space-x-4'>
+        <div className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-20'>
+          <div className='bg-white p-10 rounded-lg shadow-lg w-96 max-w-full'>
+            <h4 className='text-xl font-semibold mb-6'>Enter Amount to Deposit</h4>
+            <input type='number' onChange={handleInputChange} className='border p-3 rounded w-full mb-6 text-lg' />
+            <div className='flex justify-end space-x-6'>
               <Button
                 onClick={handleDeposit}
-                className='px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700'
+                className='px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-700'
                 isLoading={isPendingDeposit || isPendingApprove}
               >
                 Deposit
               </Button>
-              <button
+              <Button
                 onClick={() => setShowInput(false)}
-                className='px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700'
+                className='px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-700'
               >
                 Cancel
-              </button>
+              </Button>
             </div>
           </div>
         </div>

@@ -39,7 +39,7 @@ function LayoutDefault() {
     }
   }, [address, disconnect])
   return (
-    <>
+    <div className='flex flex-col min-h-screen'>
       <header className='header pb-4'>
         <div className='header-logo flex items-center'>
           <Link to='/' className='flex'>
@@ -72,14 +72,6 @@ function LayoutDefault() {
               <NavLink className='text-2xl font-extrabold font-mono' to='/history'>
                 History
               </NavLink>
-              <ul className='header-submenu'>
-                <li>
-                  <NavLink to='/history/news'>Tin Tuc Moi</NavLink>
-                </li>
-                <li>
-                  <NavLink to='/history/relate'>Tin tuc lien quan</NavLink>
-                </li>
-              </ul>
             </li>
             <li>
               <button className='fill-white text-blue-100 text-2xl font-extrabold font-mono' onClick={handleLogout}>
@@ -89,14 +81,14 @@ function LayoutDefault() {
           </ul>
         </div>
       </header>
-      <main className='main'>
+      <main className='main flex-1'>
         <Outlet />
       </main>
 
       <footer className='footer'>
         <Footer />
       </footer>
-    </>
+    </div>
   )
 }
 export default LayoutDefault

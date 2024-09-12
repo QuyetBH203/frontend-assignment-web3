@@ -79,24 +79,23 @@ function WithDrawnToken() {
 
       {showInput && (
         <div className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-50'>
-          <div className='bg-white p-6 rounded shadow-lg'>
-            <h4 className='text-lg font-normal mb-4'>amount to be withdrawn</h4>
+          <div className='bg-white p-10 rounded-lg shadow-lg w-96 max-w-full'>
+            <h4 className='text-xl font-normal mb-6'>Amount to be Withdrawn</h4>
             <input
-              // type='number'
               value={Number(ethers.formatUnits((result as Deposit).amount, 18))}
               readOnly
-              className='border p-2 rounded w-full mb-4'
+              className='border p-3 rounded w-full mb-6 text-lg'
             />
-            <div className='flex justify-end space-x-4'>
+            <div className='flex justify-end space-x-6'>
               <button
                 onClick={handleWithdrawn}
-                className='px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700 font-normal'
+                className='px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-700 font-normal'
               >
-                WithDrawn
+                Withdrawn
               </button>
               <button
                 onClick={() => setShowInput(false)}
-                className='px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700'
+                className='px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-700'
               >
                 Cancel
               </button>
