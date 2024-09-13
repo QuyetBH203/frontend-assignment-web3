@@ -78,7 +78,7 @@ function WithDrawnToken() {
       </div>
 
       {showInput && (
-        <div className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-50'>
+        <div className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-10'>
           <div className='bg-white p-10 rounded-lg shadow-lg w-96 max-w-full'>
             <h4 className='text-xl font-normal mb-6'>Amount to be Withdrawn</h4>
             <input

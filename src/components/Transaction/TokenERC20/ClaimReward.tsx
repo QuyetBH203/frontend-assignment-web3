@@ -7,13 +7,14 @@ import Deposit from '../../../type/Deposit'
 import { toast } from 'react-hot-toast'
 import { useRewardStore } from '../../../setting/store/claimReward'
 import { useStateTransaction } from '../../../setting/store/stateTransaction'
+import { Button } from '@nextui-org/react'
 
 function ClaimReward() {
   const { address } = useAccount()
   const { increaseReward } = useRewardStore()
   const { increaseTransaction } = useStateTransaction()
 
-  const { writeContractAsync: claimRewardWriteContract } = useWriteContract()
+  const { writeContractAsync: claimRewardWriteContract, isPending: isPendingReward } = useWriteContract()
   const { data: result, refetch } = useReadContract({
     address: depositContractAddress as EthAddress,
     abi: depositContractAbi,
@@ -34,7 +35,9 @@ function ClaimReward() {
       const receipt = await provider.waitForTransaction(txResponse)
       if (receipt?.status === 1) {
         await refetch()
-        toast.success(`you received ${ethers.formatUnits((result as Deposit).receiveReward, 18)}`)
+        const reward = ethers.formatUnits((result as Deposit).receiveReward, 18)
+        const formattedReward = parseFloat(reward).toFixed(5)
+        toast.success(`Received ${formattedReward}`)
         increaseReward()
         increaseTransaction()
       }
@@ -49,12 +52,13 @@ function ClaimReward() {
         <div className='flex items-center space-x-4  justify-between'>
           <h4 className='text-xl font-mono'>Claim Reward:</h4>
 
-          <button
+          <Button
             onClick={handleClick}
             className='flex-shrink-0 w-32 py-2 bg-blue-500 text-white rounded hover:bg-blue-700'
+            isLoading={isPendingReward}
           >
             Claim Reward
-          </button>
+          </Button>
         </div>
       </div>
     </>

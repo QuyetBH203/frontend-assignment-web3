@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { GetAllTransaction, Transaction } from './service/GetAllTransaction'
 import { FaCopy, FaEye } from 'react-icons/fa'
-import { Input } from '@nextui-org/react'
+import { Button, Input } from '@nextui-org/react'
 import { Pagination } from '@nextui-org/react'
 import { useStateTransaction } from '../../setting/store/stateTransaction'
 import { convertUTCToLocal, formatTxnFee } from './service/TransactionService'
@@ -14,6 +14,9 @@ function TransactionAll() {
   const [totalPage, setTotalPage] = useState<number>(0)
   const [currentPage, setCurrentPage] = useState(1)
   const [filterAddress, setFilterAddress] = useState<string>('')
+  const [showInput, setShowInput] = useState<boolean>(false)
+  const [transactionDetail, setTransactionDetail] = useState<Transaction | null>(null)
+
   const { countTs } = useStateTransaction()
 
   const copyToClipboardHash = (index: number) => {
@@ -40,6 +43,12 @@ function TransactionAll() {
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFilterAddress(String(event.target.value))
     setCurrentPage(1)
+  }
+  const showDetailTransaction = (index: number) => {
+    setShowInput(true)
+    setTransactionDetail(transactions[index])
+    console.log(transactions[index])
+    console.log(index)
   }
 
   useEffect(() => {
@@ -86,7 +95,9 @@ function TransactionAll() {
             <tr key={index} className='hover:bg-gray-100 bg-[rgb(255,251,242)]'>
               <td className='border px-2 py-2'>
                 <div className='flex items-center justify-between'>
-                  <FaEye className='text-blue-500 hover:text-blue-400 cursor-pointer' />
+                  <button onClick={() => showDetailTransaction(index)}>
+                    <FaEye className='text-blue-500 hover:text-blue-400 cursor-pointer' />
+                  </button>
                   <a href={`https://bscscan.com/tx/${txn.transactionHash}`} target='_blank' rel='noopener noreferrer'>
                     {txn.transactionHash.slice(0, 9)}..
                   </a>
@@ -136,6 +147,44 @@ function TransactionAll() {
           ))}
         </tbody>
       </table>
+      {showInput && (
+        <div className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-20'>
+          <div className='bg-white p-10 rounded-lg shadow-lg w-96 max-w-full'>
+            <div className='mb-6'>
+              <h4 className='text-lg font-semibold mb-4'>Transaction Details</h4>
+              <p className='mb-2'>
+                <span className='font-semibold'>Gas Used: </span>
+                {transactionDetail?.gasUsed}
+              </p>
+              <p className='mb-2'>
+                <span className='font-semibold'>Gas Price: </span>
+                {transactionDetail?.gasPrice}
+              </p>
+              {transactionDetail?.method.slice(0, 3) === 'NFT' ? (
+                // Nội dung hiển thị khi điều kiện đúng
+                <p className='mb-2'>
+                  <span className='font-semibold'>NFT Transfer with ID: </span>
+                  {transactionDetail?.tokenTransfer}
+                </p>
+              ) : (
+                // Nội dung hiển thị khi điều kiện sai
+                <p className='mb-2'>
+                  <span className='font-semibold'>Token Transfer: </span>
+                  {transactionDetail?.tokenTransfer}
+                </p>
+              )}
+            </div>
+            <div className='flex justify-end space-x-6'>
+              <Button
+                onClick={() => setShowInput(false)}
+                className='px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-700'
+              >
+                Cancel
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
       <Pagination
         className='pt-6 pb-6 '
         loop

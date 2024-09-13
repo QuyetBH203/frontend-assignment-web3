@@ -8,7 +8,7 @@ export interface Transaction {
   timestamp: string
   from: string
   to: string
-  tokentokenTransfer: string
+  tokenTransfer: string
   gasUsed: string
   gasPrice: string
 }

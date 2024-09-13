@@ -1,14 +1,11 @@
-import { useState } from 'react'
 import { useAccount, useReadContract } from 'wagmi'
 import { Token as depositContractAddress } from '../../contracts/DepositContract-address.json'
 import { abi as depositContractAbi } from '../../contracts/DepositContract.json'
-import { ethers } from 'ethers'
 
 type EthAddress = `0x${string}`
 
 type Hash = EthAddress
 function InforTokenUser() {
-  const [amountERC20, setAmountERC20] = useState<number | null>(10)
   const { address } = useAccount()
   const result = useReadContract({
     address: depositContractAddress as EthAddress,
@@ -20,11 +17,11 @@ function InforTokenUser() {
 
   return (
     <>
-      <div className='flex gap-x-2.5 p-1  border-gray-300 rounded-lg bg-[rgb(220,236,255)]'>
+      <div className='flex gap-x-2.5 p-1 '>
         <div className='flex-1'>
-          <h4 className='text-xl font-mono '>Your Total ERC20 Token: {amountERC20}</h4>
+          <h4 className='text-xl font-semibold text-blue-500 '>With Dapp you can exchange NFT and TokenERC20</h4>
         </div>
-        <div className='text-xl font-mono '>Your Total Reward: 1000</div>
+        {/* <div className='text-xl font-mono '>Your Total Reward: 1000</div> */}
       </div>
     </>
   )
